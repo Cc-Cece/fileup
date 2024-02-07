@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #upload-container {
+            text-align: center;
+            border: 2px dashed #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #file-input {
+            display: none;
+        }
+        #file-label {
+            cursor: pointer;
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        #file-label:hover {
+            text-decoration: underline;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="upload-container">
+        <h1>文件上传助手</h1>
+        <form action="/upload" class="dropzone" id="my-awesome-dropzone"></form>
+        <label for="file-input" id="file-label">将文件或文件夹拖入上框或直接点击上框</label>
+        <button onclick="confirmUpload()">确认上传</button>
+        <button onclick="clearList()">清空列表</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+    <script>
+        let uploadedFilesCount = 0;
+        let totalFilesCount = 0;
+        let uploadSuccess = true;
+
+        Dropzone.options.myAwesomeDropzone = {
+            autoProcessQueue: false,
+            parallelUploads: Infinity, // 不限制同时上传的文件数量
+            maxFilesize: Infinity, // 不限制单个文件的大小
+            init: function() {
+                this.on("addedfile", function(file) {
+                    console.log('文件添加到队列:', file);
+                    totalFilesCount++;
+                });
+                this.on("sending", function(file, xhr, formData) {
+                    console.log('发送文件:', file);
+                });
+                this.on("success", function(file, response) {
+                    console.log('文件上传成功:', file, response);
+                    uploadedFilesCount++;
+                    if (uploadedFilesCount === totalFilesCount) {
+                        setTimeout(function() {
+                            if (uploadSuccess) {
+                                alert('所有文件上传成功！');
+                            } else {
+                                alert('部分文件上传成功！');
+                            }
+                        }, 500); // 0.5 秒延迟
+                    }
+                });
+                this.on("error", function(file, errorMessage, xhr) {
+                    console.error('文件上传失败:', file, errorMessage);
+                    uploadSuccess = false;
+                    if (uploadedFilesCount === totalFilesCount) {
+                        setTimeout(function() {
+                            alert('所有文件上传失败！');
+                        }, 500); // 0.5 秒延迟
+                    }
+                });
+            }
+        };
+
+        function confirmUpload() {
+            Dropzone.forElement('#my-awesome-dropzone').processQueue();
+        }
+
+        function clearList() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
