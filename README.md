@@ -11,18 +11,7 @@
 `npm install express multer`
 
 运行前请检查你的文件是否完整,如下
-project_folder/
-│
-├── public/
-│   └── index.html
-│
-├── uploads/ (此文件夹用于存储上传的文件)
-│
-├── node_modules/ (Node.js依赖的模块文件夹)
-│
-├── package.json
-│
-└── server.js (或者您的服务器端代码文件)
+![Snipaste_2024-02-07_22-01-27.png](https://s2.loli.net/2024/02/07/lGibaHrTg57O3jo.png)
 
 ### 运行:
 
